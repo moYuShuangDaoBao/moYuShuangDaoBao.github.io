@@ -1,24 +1,30 @@
-// 这里需要替换为你自己的Bing API密钥和端点
-const bingApiKey = 'https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=zh-CN'
-const bingEndpoint = 'https://api.bing.microsoft.com/v7.0/images/search';
-
-async function setRandomBackgroundImage() {
-    const query = "风景"; // 可以根据需要修改查询词
-    const response = await fetch(`${bingEndpoint}?q=${encodeURIComponent(query)}&count=1`, {
-        headers: {
-            'Ocp-Apim-Subscription-Key': bingApiKey
-        }
-    });
-
-    if (!response.ok) {
-        console.error("Failed to fetch image from Bing API");
-        return;
+// scripts.js
+async function setBingDailyBackground() {
+    try {
+      // 调用 Bing 每日壁纸官方接口（免费！）
+      const response = await fetch('https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=zh-CN');
+      
+      if (!response.ok) throw new Error('获取背景失败');
+  
+      const data = await response.json();
+      const imageUrl = 'https://www.bing.com' + data.images[0].url;
+  
+      // 设置背景
+      document.body.style.backgroundImage = `url(${imageUrl})`;
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundPosition = 'center';
+      document.body.style.backgroundAttachment = 'fixed';
+      
+      console.log('背景已设置:', imageUrl);
+    } catch (error) {
+      console.warn('Bing 背景加载失败，使用默认渐变背景');
+      document.body.style.background = 'linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)';
     }
-
-    const data = await response.json();
-    if (data.value && data.value.length > 0) {
-        document.body.style.backgroundImage = `url(${data.value[0].thumbnailUrl})`;
-    }
-}
-
-setRandomBackgroundImage();
+  }
+  
+  // 页面加载完成后执行
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setBingDailyBackground);
+  } else {
+    setBingDailyBackground();
+  }

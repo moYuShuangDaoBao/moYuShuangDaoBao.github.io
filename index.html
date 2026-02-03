@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>兔兔伯爵出击 · 静谧空间</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="logo">早安 · 午安 · 晚安</h1>
+            <p class="subtitle">静谧空间</p>
+        </header>
+        
+        <div class="cards-grid">
+            <div class="card" onclick="openModal('music')">
+                <i class="fas fa-music"></i>
+                <h3>音乐播放器</h3>
+                <p>精选音乐</p>
+            </div>
+            
+            <div class="card" onclick="openModal('logs')">
+                <i class="fas fa-book"></i>
+                <h3>个人日志</h3>
+                <p>日常记录</p>
+            </div>
+            
+            <div class="card" onclick="openModal('weather')">
+                <i class="fas fa-cloud"></i>
+                <h3>天气</h3>
+                <p id="weather-text">加载中...</p>
+            </div>
+            
+            <div class="card" onclick="openModal('news')">
+                <i class="fas fa-newspaper"></i>
+                <h3>新闻</h3>
+                <p>最新资讯</p>
+            </div>
+            
+            <div class="card" onclick="openModal('quote')">
+                <i class="fas fa-quote-left"></i>
+                <h3>每日语录</h3>
+                <p>名人名言</p>
+            </div>
+            
+            <div class="card" onclick="window.open('https://github.com', '_blank')">
+                <i class="fab fa-github"></i>
+                <h3>GitHub</h3>
+                <p>开源项目</p>
+            </div>
+        </div>
+        
+        <footer>
+            <p id="current-time"></p>
+            <p>LAPLACE © 2023</p>
+        </footer>
+    </div>
+    
+    <!-- 所有模态框 -->
+    <div id="music-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-headphones"></i> 音乐播放器</h2>
+                <button class="close-btn" onclick="closeModal('music')">×</button>
+            </div>
+            <div class="modal-body" id="music-content"></div>
+        </div>
+    </div>
+    
+    <div id="logs-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-book-open"></i> 个人日志</h2>
+                <button class="close-btn" onclick="closeModal('logs')">×</button>
+            </div>
+            <div class="modal-body" id="logs-content"></div>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>

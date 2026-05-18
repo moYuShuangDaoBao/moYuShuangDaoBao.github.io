@@ -1,84 +1,1326 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>兔兔伯爵出击 · 静谧空间</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MySpace — 个人主页</title>
+<style>
+/* ===== CSS Variables ===== */
+:root {
+  --bg: #fafafa;
+  --card-bg: #ffffff;
+  --text: #111827;
+  --text-muted: #6b7280;
+  --accent: #7c3aed;
+  --accent-2: #4f46e5;
+  --border: #e5e7eb;
+  --radius: 16px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.05);
+  --shadow-hover: 0 4px 16px rgba(0,0,0,0.08);
+  --transition: 0.25s cubic-bezier(0.4,0,0.2,1);
+  --max-width: 1200px;
+  --nav-h: 64px;
+}
+
+/* ===== Reset & Base ===== */
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; font-size:16px; }
+body {
+  font-family: system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Particles Canvas ===== */
+#particles {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 0;
+}
+
+/* ===== Navigation ===== */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(255,255,255,0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid transparent;
+  transition: var(--transition);
+}
+nav.scrolled { border-bottom-color: var(--border); }
+.nav-container {
+  max-width: var(--max-width); margin: 0 auto; padding: 0 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  height: var(--nav-h);
+}
+.nav-logo {
+  font-size: 1.3rem; font-weight: 800;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; text-decoration: none;
+}
+.nav-links { display: flex; gap: 28px; list-style: none; }
+.nav-links a {
+  color: var(--text-muted); text-decoration: none; font-size: 0.9rem;
+  font-weight: 500; transition: var(--transition);
+}
+.nav-links a:hover { color: var(--accent); }
+
+/* ===== Hero ===== */
+#hero {
+  position: relative; z-index: 1;
+  min-height: calc(100vh - var(--nav-h)); padding: 100px 24px 60px;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center;
+}
+.hero-content { max-width: 600px; }
+.avatar {
+  width: 96px; height: 96px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  margin: 0 auto 24px; display: flex; align-items: center; justify-content: center;
+  font-size: 2.5rem; color: #fff;
+  box-shadow: 0 0 40px rgba(124,58,237,0.2);
+  animation: float 4s ease-in-out infinite;
+}
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+#hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 12px; }
+#hero h1 .typing {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+#hero h1 .cursor {
+  display: inline-block; width: 2px; height: 1.1em;
+  background: var(--accent); margin-left: 2px;
+  animation: blink 0.8s infinite;
+}
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+#hero .subtitle { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 32px; }
+.hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 10px 24px;
+  border-radius: 50px; font-size: 0.9rem; font-weight: 600;
+  text-decoration: none; cursor: pointer; transition: var(--transition);
+  border: none; font-family: inherit;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff; box-shadow: 0 4px 16px rgba(124,58,237,0.3);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(124,58,237,0.4); }
+.btn-outline {
+  background: transparent; color: var(--text); border: 1px solid var(--border);
+}
+.btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ===== Sections ===== */
+section { position: relative; z-index: 1; padding: 80px 24px; }
+.section-title {
+  font-size: 1.6rem; font-weight: 700; text-align: center;
+  margin-bottom: 40px; color: var(--text);
+}
+.container { max-width: var(--max-width); margin: 0 auto; }
+
+/* ===== Bento Grid ===== */
+.bento-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-rows: auto auto auto;
+  gap: 20px;
+  grid-template-areas:
+    "weather countdown quote"
+    "pomodoro todo notes";
+}
+.bento-card {
+  background: var(--card-bg); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 24px;
+  transition: var(--transition);
+}
+.bento-card:hover {
+  box-shadow: var(--shadow-hover); transform: translateY(-2px);
+}
+.bento-card .card-title {
+  font-size: 0.85rem; font-weight: 600; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px;
+}
+#weather-card { grid-area: weather; }
+#countdown-card { grid-area: countdown; }
+#quote-card { grid-area: quote; }
+#pomodoro-card { grid-area: pomodoro; }
+#todo-card { grid-area: todo; }
+#notes-card { grid-area: notes; }
+/* ===== Weather ===== */
+.weather-widget { text-align: center; }
+.weather-city-select { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; }
+.city-btn {
+  padding: 4px 16px; border-radius: 20px; border: 1px solid var(--border);
+  background: transparent; color: var(--text-muted); cursor: pointer;
+  font-size: 0.85rem; transition: var(--transition); font-family: inherit;
+}
+.city-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.weather-main { margin: 16px 0; }
+.weather-icon { font-size: 3rem; margin-bottom: 8px; }
+.weather-temp { font-size: 2.5rem; font-weight: 700; }
+.weather-desc { color: var(--text-muted); font-size: 0.9rem; }
+.weather-detail { display: flex; gap: 24px; justify-content: center; color: var(--text-muted); font-size: 0.85rem; }
+
+/* ===== Countdown ===== */
+.countdown-widget { text-align: center; }
+.countdown-display { display: flex; gap: 12px; justify-content: center; margin: 12px 0; }
+.cd-unit { display: flex; flex-direction: column; align-items: center; min-width: 56px; }
+.cd-num { font-size: 2rem; font-weight: 700; line-height: 1; color: var(--accent); }
+.cd-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+.countdown-event { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px; }
+.countdown-set-btn {
+  padding: 6px 20px; border-radius: 20px; border: 1px solid var(--border);
+  background: transparent; color: var(--text-muted); cursor: pointer;
+  font-size: 0.8rem; font-family: inherit;
+}
+.countdown-set-btn:hover { border-color: var(--accent); color: var(--accent); }
+.countdown-form { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.cd-input {
+  padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border);
+  font-size: 0.85rem; font-family: inherit; outline: none;
+}
+.cd-input:focus { border-color: var(--accent); }
+.cd-save-btn, .cd-del-btn {
+  padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer;
+  font-size: 0.85rem; font-family: inherit;
+}
+.cd-save-btn { background: var(--accent); color: #fff; }
+.cd-del-btn { background: #fee2e2; color: #ef4444; }
+
+/* ===== Quote ===== */
+.quote-widget { text-align: center; position: relative; min-height: 120px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+.quote-text { font-size: 1rem; line-height: 1.6; font-style: italic; color: var(--text); max-width: 280px; }
+.quote-from { font-size: 0.8rem; color: var(--text-muted); margin-top: 12px; }
+.quote-refresh {
+  position: absolute; top: 0; right: 0; background: none; border: none;
+  color: var(--text-muted); cursor: pointer; font-size: 1.2rem;
+  padding: 4px; transition: var(--transition);
+}
+.quote-refresh:hover { color: var(--accent); transform: rotate(180deg); }
+
+/* ===== Pomodoro ===== */
+.pomo-widget { text-align: center; }
+.pomo-ring { position: relative; width: 120px; height: 120px; margin: 0 auto 12px; }
+.pomo-svg { width: 100%; height: 100%; }
+.pomo-time {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 1.6rem; font-weight: 700;
+}
+.pomo-mode { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; }
+.pomo-controls { display: flex; gap: 8px; justify-content: center; }
+.pomo-btn {
+  padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border);
+  background: transparent; cursor: pointer; font-size: 0.8rem;
+  font-family: inherit; transition: var(--transition);
+}
+.pomo-btn:hover { border-color: var(--accent); color: var(--accent); }
+.pomo-reset:hover { border-color: #ef4444; color: #ef4444; }
+
+/* ===== TODO ===== */
+.todo-input-row { display: flex; gap: 8px; margin-bottom: 12px; }
+.todo-input {
+  flex: 1; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border);
+  font-size: 0.85rem; font-family: inherit; outline: none;
+}
+.todo-input:focus { border-color: var(--accent); }
+.todo-add-btn {
+  width: 36px; height: 36px; border-radius: 8px; border: none;
+  background: var(--accent); color: #fff; font-size: 1.2rem; cursor: pointer;
+}
+.todo-list { list-style: none; max-height: 200px; overflow-y: auto; }
+.todo-item {
+  display: flex; align-items: center; gap: 8px; padding: 8px 0;
+  border-bottom: 1px solid #f3f4f6; font-size: 0.85rem;
+}
+.todo-item:last-child { border-bottom: none; }
+.todo-check {
+  width: 16px; height: 16px; border-radius: 4px; border: 2px solid var(--border);
+  cursor: pointer; appearance: none; -webkit-appearance: none;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  transition: var(--transition);
+}
+.todo-check:checked { background: var(--accent); border-color: var(--accent); position: relative; }
+.todo-check:checked::after { content: '✓'; color: #fff; font-size: 11px; font-weight: 700; }
+.todo-text { flex: 1; }
+.todo-text.done { text-decoration: line-through; color: var(--text-muted); }
+.todo-del {
+  background: none; border: none; color: #d1d5db; cursor: pointer;
+  font-size: 0.9rem; padding: 2px 4px; transition: var(--transition);
+}
+.todo-del:hover { color: #ef4444; }
+
+/* ===== Notes ===== */
+.notes-add-btn {
+  width: 100%; padding: 10px; border-radius: 10px; border: 1px dashed var(--border);
+  background: transparent; color: var(--text-muted); cursor: pointer;
+  font-size: 0.85rem; font-family: inherit; transition: var(--transition);
+  margin-bottom: 12px;
+}
+.notes-add-btn:hover { border-color: var(--accent); color: var(--accent); }
+.note-item {
+  background: #fffbeb; border-radius: 10px; padding: 12px; margin-bottom: 8px;
+  position: relative;
+}
+.note-text {
+  width: 100%; min-height: 60px; border: none; background: transparent;
+  resize: vertical; font-size: 0.85rem; font-family: inherit; outline: none;
+  line-height: 1.5;
+}
+.note-del {
+  position: absolute; top: 6px; right: 8px; background: none; border: none;
+  color: #d1d5db; cursor: pointer; font-size: 0.85rem; padding: 2px 4px;
+}
+.note-del:hover { color: #ef4444; }
+
+/* ===== Music Player ===== */
+.music-wrapper {
+  background: var(--card-bg); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 28px;
+}
+.music-search { display: flex; gap: 12px; margin-bottom: 20px; }
+.music-search input {
+  flex: 1; padding: 12px 18px; border-radius: 50px; border: 1px solid var(--border);
+  background: var(--bg); color: var(--text); font-size: 0.9rem;
+  outline: none; font-family: inherit;
+}
+.music-search input:focus { border-color: var(--accent); }
+.music-search button {
+  padding: 12px 24px; border-radius: 50px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff; border: none; font-weight: 600; cursor: pointer; font-family: inherit;
+}
+.music-status { text-align: center; color: var(--text-muted); padding: 32px 0; }
+.music-status .spinner {
+  display: inline-block; width: 28px; height: 28px;
+  border: 3px solid var(--border); border-top-color: var(--accent);
+  border-radius: 50%; animation: spin 0.7s linear infinite; margin-bottom: 8px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.track-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.track-card {
+  display: flex; align-items: center; gap: 12px; padding: 12px;
+  border-radius: 12px; background: var(--bg); cursor: pointer;
+  transition: var(--transition);
+}
+.track-card:hover { background: #f3f0ff; }
+.track-card.playing { background: #ede9fe; box-shadow: 0 0 0 2px var(--accent); }
+.track-cover { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+.track-info { min-width: 0; flex: 1; }
+.track-name { font-weight: 600; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.track-artist { font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.track-card .play-indicator { margin-left: auto; color: var(--accent); display: none; }
+.track-card.playing .play-indicator { display: block; }
+
+/* Now Playing Bar */
+.now-playing {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  padding: 12px 24px; display: flex; align-items: center; gap: 16px;
+  transform: translateY(100%); transition: transform 0.35s ease;
+}
+.now-playing.visible { transform: translateY(0); }
+.np-cover { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+.np-info { min-width: 0; flex: 1; }
+.np-title { font-weight: 600; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.np-artist { font-size: 0.73rem; color: var(--text-muted); }
+.np-controls { display: flex; align-items: center; gap: 12px; }
+.np-btn {
+  background: none; border: none; color: var(--text); font-size: 1.2rem;
+  cursor: pointer; width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; transition: var(--transition);
+}
+.np-btn:hover { background: #f3f4f6; }
+.np-btn.play-btn { background: var(--accent); color: #fff; font-size: 1.3rem; }
+.np-btn.play-btn:hover { background: var(--accent-2); }
+.np-progress-wrap { display: flex; align-items: center; gap: 8px; }
+.np-progress-wrap input[type="range"] {
+  width: 100px; height: 4px; -webkit-appearance: none; appearance: none;
+  border-radius: 2px; background: var(--border); outline: none;
+}
+.np-progress-wrap input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%;
+  background: var(--accent); cursor: pointer;
+}
+.np-time { font-size: 0.7rem; color: var(--text-muted); min-width: 36px; text-align: center; font-variant-numeric: tabular-nums; }
+.np-volume-wrap { display: flex; align-items: center; gap: 8px; }
+.np-volume-wrap span { font-size:0.9rem; }
+.np-volume-wrap input[type="range"] {
+  width: 60px; height: 4px; -webkit-appearance: none; appearance: none;
+  border-radius: 2px; background: var(--border); outline: none;
+}
+.np-volume-wrap input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); cursor: pointer;
+}
+.np-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.1rem; padding: 4px 8px; }
+.np-close:hover { color: var(--text); }
+
+/* ===== Guestbook ===== */
+.guestbook-wrapper { max-width: 640px; margin: 0 auto; }
+.gb-form {
+  background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 24px; margin-bottom: 28px;
+}
+.gb-form .form-row { display: flex; gap: 12px; margin-bottom: 12px; }
+.gb-form input, .gb-form textarea {
+  width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--bg); color: var(--text); font-size: 0.88rem;
+  outline: none; font-family: inherit;
+}
+.gb-form input:focus, .gb-form textarea:focus { border-color: var(--accent); }
+.gb-form textarea { resize: vertical; min-height: 90px; }
+.gb-list { display: flex; flex-direction: column; gap: 12px; }
+.gb-message {
+  background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 16px 20px; animation: fadeUp 0.35s ease;
+}
+@keyframes fadeUp { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+.gb-msg-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.gb-msg-name { font-weight: 700; color: var(--accent); font-size: 0.9rem; }
+.gb-msg-time { font-size: 0.73rem; color: var(--text-muted); }
+.gb-msg-body { color: var(--text); font-size: 0.88rem; word-break: break-word; }
+.gb-msg-delete {
+  background: none; border: none; color: var(--text-muted); cursor: pointer;
+  font-size: 0.8rem; padding: 4px 8px; border-radius: 6px; transition: var(--transition);
+}
+.gb-msg-delete:hover { color: #ef4444; background: #fef2f2; }
+.gb-empty { text-align: center; padding: 40px 0; color: var(--text-muted); font-size: 0.9rem; }
+
+/* ===== Footer ===== */
+footer { position: relative; z-index: 1; text-align: center; padding: 32px 24px; color: var(--text-muted); font-size: 0.8rem; }
+footer .footer-links { display: flex; gap: 20px; justify-content: center; margin-bottom: 12px; flex-wrap: wrap; }
+footer .footer-links a { color: var(--text-muted); text-decoration: none; transition: var(--transition); }
+footer .footer-links a:hover { color: var(--accent); }
+
+/* ===== Toast ===== */
+.toast {
+  position: fixed; top: 80px; right: 24px; z-index: 300;
+  background: var(--card-bg); border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  padding: 12px 20px; color: var(--text); font-size: 0.85rem; font-weight: 500;
+  animation: slideIn 0.3s ease, fadeOut 0.3s ease 2s forwards;
+}
+@keyframes slideIn { from { opacity:0; transform: translateX(40px); } to { opacity:1; transform: translateX(0); } }
+@keyframes fadeOut { from { opacity:1; } to { opacity:0; transform: translateY(-8px); } }
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .bento-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "weather weather"
+      "countdown quote"
+      "pomodoro todo"
+      "notes notes";
+  }
+}
+@media (max-width: 768px) {
+  #hero h1 { font-size: 2rem; }
+  .section-title { font-size: 1.3rem; }
+  section { padding: 60px 16px; }
+  .music-search { flex-direction: column; }
+  .track-grid { grid-template-columns: 1fr; }
+  .np-progress-wrap, .np-volume-wrap { display: none; }
+  .now-playing { padding: 10px 14px; }
+  .np-controls { gap: 8px; }
+  .nav-links { gap: 16px; }
+  .gb-form .form-row { flex-direction: column; }
+}
+@media (max-width: 600px) {
+  .bento-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "weather"
+      "countdown"
+      "quote"
+      "pomodoro"
+      "todo"
+      "notes";
+  }
+}
+@media (max-width: 480px) {
+  #hero h1 { font-size: 1.5rem; }
+  .avatar { width: 72px; height: 72px; font-size: 2rem; }
+  .nav-container { padding: 0 16px; }
+  .nav-links { gap: 10px; }
+  .nav-links a { font-size: 0.8rem; }
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1 class="logo">早安 · 午安 · 晚安</h1>
-            <p class="subtitle">静谧空间</p>
-        </header>
-        
-        <div class="cards-grid">
-            <div class="card" onclick="openModal('music')">
-                <i class="fas fa-music"></i>
-                <h3>音乐播放器</h3>
-                <p>精选音乐</p>
-            </div>
-            
-            <div class="card" onclick="openModal('logs')">
-                <i class="fas fa-book"></i>
-                <h3>个人日志</h3>
-                <p>日常记录</p>
-            </div>
-            
-            <div class="card" onclick="openModal('weather')">
-                <i class="fas fa-cloud"></i>
-                <h3>天气</h3>
-                <p id="weather-text">加载中...</p>
-            </div>
-            
-            <div class="card" onclick="openModal('news')">
-                <i class="fas fa-newspaper"></i>
-                <h3>新闻</h3>
-                <p>最新资讯</p>
-            </div>
-            
-            <div class="card" onclick="openModal('quote')">
-                <i class="fas fa-quote-left"></i>
-                <h3>每日语录</h3>
-                <p>名人名言</p>
-            </div>
-            
-            <div class="card" onclick="window.open('https://github.com', '_blank')">
-                <i class="fab fa-github"></i>
-                <h3>GitHub</h3>
-                <p>开源项目</p>
-            </div>
-        </div>
-        
-        <footer>
-            <p id="current-time"></p>
-            <p>LAPLACE © 2023</p>
-        </footer>
+
+<canvas id="particles"></canvas>
+
+<!-- ===== Navigation ===== -->
+<nav id="navbar">
+  <div class="nav-container">
+    <a href="#" class="nav-logo">MySpace</a>
+    <div class="nav-links">
+      <a href="#hero">首页</a>
+      <a href="#tools">工具</a>
+      <a href="#music">音乐</a>
+      <a href="#guestbook">留言</a>
     </div>
-    
-    <!-- 所有模态框 -->
-    <div id="music-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2><i class="fas fa-headphones"></i> 音乐播放器</h2>
-                <button class="close-btn" onclick="closeModal('music')">×</button>
-            </div>
-            <div class="modal-body" id="music-content"></div>
-        </div>
+  </div>
+</nav>
+
+<!-- ===== Hero ===== -->
+<section id="hero">
+  <div class="hero-content">
+    <div class="avatar">✨</div>
+    <h1>你好，我是<span class="typing"></span><span class="cursor">|</span></h1>
+    <p class="subtitle">热爱技术与音乐 · 喜欢创造美好的事物</p>
+    <div class="hero-btns">
+      <a href="#tools" class="btn btn-primary">探索工具</a>
+      <a href="#music" class="btn btn-outline">听音乐</a>
     </div>
-    
-    <div id="logs-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2><i class="fas fa-book-open"></i> 个人日志</h2>
-                <button class="close-btn" onclick="closeModal('logs')">×</button>
+  </div>
+</section>
+
+<!-- ===== Tools (Bento Grid) ===== -->
+<section id="tools">
+  <div class="container">
+    <h2 class="section-title">工具箱</h2>
+    <div class="bento-grid" id="bentoGrid">
+      <!-- Weather -->
+      <div class="bento-card" id="weather-card">
+        <div class="card-title">🌤 天气</div>
+        <div id="weatherContent">
+          <div class="weather-widget">
+            <div class="weather-city-select">
+              <button class="city-btn active" data-city="大连">大连</button>
+              <button class="city-btn" data-city="沈阳">沈阳</button>
             </div>
-            <div class="modal-body" id="logs-content"></div>
+            <div class="weather-main">
+              <div class="weather-icon" id="weatherIcon">☀️</div>
+              <div class="weather-temp" id="weatherTemp">--°C</div>
+              <div class="weather-desc" id="weatherDesc">--</div>
+            </div>
+            <div class="weather-detail">
+              <span>💨 <span id="weatherWind">--</span></span>
+              <span>💧 <span id="weatherHumidity">--</span></span>
+            </div>
+          </div>
         </div>
+      </div>
+      <!-- Countdown -->
+      <div class="bento-card" id="countdown-card">
+        <div class="card-title">⏱ 倒计时</div>
+        <div id="countdownContent">
+          <div class="countdown-widget">
+            <div class="countdown-display" id="countdownDisplay">
+              <div class="cd-unit"><span class="cd-num" id="cdDays">--</span><span class="cd-label">天</span></div>
+              <div class="cd-unit"><span class="cd-num" id="cdHours">--</span><span class="cd-label">时</span></div>
+              <div class="cd-unit"><span class="cd-num" id="cdMins">--</span><span class="cd-label">分</span></div>
+              <div class="cd-unit"><span class="cd-num" id="cdSecs">--</span><span class="cd-label">秒</span></div>
+            </div>
+            <div class="countdown-event" id="countdownEvent">未设置</div>
+            <button class="countdown-set-btn" id="countdownSetBtn">设置倒计时</button>
+            <div class="countdown-form" id="countdownForm" style="display:none">
+              <input type="text" id="cdEventName" placeholder="事件名称" class="cd-input">
+              <input type="date" id="cdEventDate" class="cd-input">
+              <button class="cd-save-btn" id="cdSaveBtn">保存</button>
+              <button class="cd-del-btn" id="cdDelBtn">删除</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Quote -->
+      <div class="bento-card" id="quote-card">
+        <div class="card-title">💬 每日一言</div>
+        <div id="quoteContent">
+          <div class="quote-widget">
+            <div class="quote-text" id="quoteText">加载中...</div>
+            <div class="quote-from" id="quoteFrom"></div>
+            <button class="quote-refresh" id="quoteRefresh" title="换一句">↻</button>
+          </div>
+        </div>
+      </div>
+      <!-- Pomodoro -->
+      <div class="bento-card" id="pomodoro-card">
+        <div class="card-title">🍅 番茄钟</div>
+        <div id="pomodoroContent">
+          <div class="pomo-widget">
+            <div class="pomo-ring">
+              <svg viewBox="0 0 120 120" class="pomo-svg">
+                <circle cx="60" cy="60" r="52" fill="none" stroke="#e5e7eb" stroke-width="6"/>
+                <circle cx="60" cy="60" r="52" fill="none" stroke="var(--accent)" stroke-width="6"
+                  stroke-dasharray="326.7" stroke-dashoffset="0" stroke-linecap="round"
+                  transform="rotate(-90 60 60)" id="pomoRing"/>
+              </svg>
+              <div class="pomo-time" id="pomoTime">25:00</div>
+            </div>
+            <div class="pomo-mode" id="pomoMode">🎯 专注</div>
+            <div class="pomo-controls">
+              <button class="pomo-btn" id="pomoStart">▶ 开始</button>
+              <button class="pomo-btn pomo-reset" id="pomoReset">↺ 重置</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- TODO -->
+      <div class="bento-card" id="todo-card">
+        <div class="card-title">✅ TODO</div>
+        <div id="todoContent">
+          <div class="todo-widget">
+            <div class="todo-input-row">
+              <input type="text" id="todoInput" placeholder="添加待办..." class="todo-input">
+              <button id="todoAdd" class="todo-add-btn">+</button>
+            </div>
+            <ul class="todo-list" id="todoList"></ul>
+          </div>
+        </div>
+      </div>
+      <!-- Notes -->
+      <div class="bento-card" id="notes-card">
+        <div class="card-title">📝 便签</div>
+        <div id="notesContent">
+          <div class="notes-widget">
+            <button class="notes-add-btn" id="notesAddBtn">+ 新建便签</button>
+            <div class="notes-list" id="notesList"></div>
+          </div>
+        </div>
+      </div>
+
     </div>
-    
-    <script src="app.js"></script>
+  </div>
+</section>
+
+<!-- ===== Music Player ===== -->
+<section id="music">
+  <div class="container">
+    <h2 class="section-title">🎵 音乐播放器</h2>
+    <div class="music-wrapper">
+      <div class="music-search">
+        <input type="text" id="searchInput" placeholder="搜索歌曲..." maxlength="100">
+        <button id="searchBtn">搜索</button>
+      </div>
+      <div id="musicStatus" class="music-status">搜索你想听的歌，点击播放完整歌曲 🎧</div>
+      <div id="trackGrid" class="track-grid"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Guestbook ===== -->
+<section id="guestbook">
+  <div class="container">
+    <h2 class="section-title">💬 留言板</h2>
+    <div class="guestbook-wrapper">
+      <div class="gb-form">
+        <div class="form-row">
+          <input type="text" id="gbName" placeholder="你的昵称" maxlength="30">
+          <input type="text" id="gbAvatar" placeholder="头像表情 (可选)" maxlength="4" style="max-width:180px;">
+        </div>
+        <textarea id="gbMessage" placeholder="写下你想说的话..." maxlength="500"></textarea>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+          <span style="font-size:0.78rem;color:var(--text-muted)" id="charCount">0 / 500</span>
+          <button id="gbSubmit" class="btn btn-primary">发送留言</button>
+        </div>
+      </div>
+      <div id="gbList" class="gb-list"></div>
+      <div id="gbEmpty" class="gb-empty">还没有留言，来成为第一个吧 ✍️</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer>
+  <div class="footer-links">
+    <a href="#">GitHub</a>
+    <a href="#">Email</a>
+    <a href="#">Twitter</a>
+  </div>
+  <p>&copy; 2026 MySpace. Made with ❤️</p>
+</footer>
+
+<!-- ===== Audio ===== -->
+<audio id="audioPlayer" preload="none"></audio>
+
+<!-- ===== Now Playing Bar ===== -->
+<div class="now-playing" id="nowPlaying">
+  <img class="np-cover" id="npCover" src="" alt="Cover">
+  <div class="np-info">
+    <div class="np-title" id="npTitle">未选择歌曲</div>
+    <div class="np-artist" id="npArtist">—</div>
+  </div>
+  <div class="np-controls">
+    <button class="np-btn" id="npPrev" title="上一首">⏮</button>
+    <button class="np-btn play-btn" id="npPlay" title="播放/暂停">▶</button>
+    <button class="np-btn" id="npNext" title="下一首">⏭</button>
+  </div>
+  <div class="np-progress-wrap">
+    <span class="np-time" id="npCurrent">0:00</span>
+    <input type="range" id="npProgress" min="0" max="100" value="0">
+    <span class="np-time" id="npDuration">0:00</span>
+  </div>
+  <div class="np-volume-wrap">
+    <span>🔊</span>
+    <input type="range" id="npVolume" min="0" max="1" step="0.05" value="0.7">
+  </div>
+  <button class="np-close" id="npClose" title="关闭">✕</button>
+</div>
+
+<script>
+// ===== Particles =====
+(function() {
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  const COUNT = 50;
+  const MAX_DIST = 120;
+
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  window.addEventListener('resize', resize);
+  resize();
+
+  for (let i = 0; i < COUNT; i++) {
+    particles.push({
+      x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4,
+      r: Math.random() * 1.5 + 0.5,
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (const p of particles) {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0) p.x = canvas.width; if (p.x > canvas.width) p.x = 0;
+      if (p.y < 0) p.y = canvas.height; if (p.y > canvas.height) p.y = 0;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(124, 58, 237, 0.3)';
+      ctx.fill();
+    }
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < MAX_DIST) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(124, 58, 237, ${(1 - dist / MAX_DIST) * 0.08})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ===== Nav Scroll =====
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// ===== Typing Animation =====
+(function() {
+  const el = document.querySelector('#hero .typing');
+  const texts = ['兔兔伯爵出击！', '一个开发者', '一个梦想家'];
+  let textIdx = 0, charIdx = 0, isDeleting = false, timeout;
+  function type() {
+    const current = texts[textIdx];
+    el.textContent = isDeleting ? current.substring(0, charIdx - 1) : current.substring(0, charIdx + 1);
+    charIdx += isDeleting ? -1 : 1;
+    let speed = isDeleting ? 40 : 100;
+    if (!isDeleting && charIdx === current.length) { speed = 1800; isDeleting = true; }
+    else if (isDeleting && charIdx === 0) { isDeleting = false; textIdx = (textIdx + 1) % texts.length; speed = 400; }
+    timeout = setTimeout(type, speed);
+  }
+  type();
+})();
+
+// ===== Scroll Reveal =====
+(function() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.bento-card, .gb-message, .gb-form, .music-wrapper').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    observer.observe(el);
+  });
+})();
+
+// ===== Weather =====
+(function() {
+  const API = 'https://api.open-meteo.com/v1/forecast';
+  const CITIES = {
+    '大连': { lat: 38.914, lon: 121.615 },
+    '沈阳': { lat: 41.805, lon: 123.431 },
+  };
+  let currentCity = '大连';
+
+  function getWmoIcon(code) {
+    if (code === 0) return '☀️';
+    if (code <= 3) return '⛅';
+    if (code <= 48) return '🌫';
+    if (code <= 67) return '🌧';
+    if (code <= 77) return '🌨';
+    if (code <= 86) return '🌨';
+    return '⛈';
+  }
+
+  async function fetchWeather(city) {
+    const coord = CITIES[city];
+    if (!coord) return null;
+    try {
+      const res = await fetch(`${API}?latitude=${coord.lat}&longitude=${coord.lon}&current_weather=true&hourly=relative_humidity_2m&timezone=Asia/Shanghai`);
+      if (!res.ok) throw new Error('fetch failed');
+      const data = await res.json();
+      const w = data.current_weather;
+      const humidity = data.hourly?.relative_humidity_2m?.[0] ?? '--';
+      const result = {
+        temp: w.temperature,
+        code: w.weathercode,
+        wind: `${w.windspeed} km/h`,
+        humidity: `${humidity}%`,
+      };
+      const cache = JSON.parse(localStorage.getItem('myspace_weather') || '{}');
+      cache[city] = { ...result, time: Date.now() };
+      localStorage.setItem('myspace_weather', JSON.stringify(cache));
+      return result;
+    } catch { return null; }
+  }
+
+  async function updateWeather(city) {
+    const cache = JSON.parse(localStorage.getItem('myspace_weather') || '{}');
+    const cached = cache[city];
+    if (cached && (Date.now() - cached.time) < 1800000) {
+      renderWeather(cached);
+      return;
+    }
+    const data = await fetchWeather(city);
+    if (data) renderWeather(data);
+  }
+
+  function renderWeather(data) {
+    document.getElementById('weatherIcon').textContent = getWmoIcon(data.code);
+    document.getElementById('weatherTemp').textContent = `${Math.round(data.temp)}°C`;
+    document.getElementById('weatherDesc').textContent =
+      data.code === 0 ? '晴朗' : data.code <= 3 ? '多云' : '有雨雪';
+    document.getElementById('weatherWind').textContent = data.wind;
+    document.getElementById('weatherHumidity').textContent = data.humidity;
+  }
+
+  document.querySelectorAll('.city-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.city-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentCity = btn.dataset.city;
+      updateWeather(currentCity);
+    });
+  });
+  updateWeather('大连');
+})();
+
+// ===== Countdown =====
+(function() {
+  const KEY = 'myspace_countdown';
+  let interval;
+
+  function loadEvent() { try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch { return null; } }
+  function saveEvent(data) { localStorage.setItem(KEY, JSON.stringify(data)); }
+
+  function render() {
+    const ev = loadEvent();
+    const display = document.getElementById('countdownDisplay');
+    const eventEl = document.getElementById('countdownEvent');
+    if (!ev) {
+      display.style.display = 'none';
+      eventEl.textContent = '未设置倒计时';
+      return;
+    }
+    display.style.display = 'flex';
+    eventEl.textContent = `⏰ ${ev.name}`;
+    const target = new Date(ev.date).getTime();
+    const diff = Math.max(0, target - Date.now());
+    document.getElementById('cdDays').textContent = String(Math.floor(diff / 86400000)).padStart(2,'0');
+    document.getElementById('cdHours').textContent = String(Math.floor((diff % 86400000) / 3600000)).padStart(2,'0');
+    document.getElementById('cdMins').textContent = String(Math.floor((diff % 3600000) / 60000)).padStart(2,'0');
+    document.getElementById('cdSecs').textContent = String(Math.floor((diff % 60000) / 1000)).padStart(2,'0');
+  }
+
+  document.getElementById('countdownSetBtn').addEventListener('click', () => {
+    const ev = loadEvent();
+    const form = document.getElementById('countdownForm');
+    form.style.display = form.style.display === 'none' ? 'flex' : 'none';
+    if (ev) {
+      document.getElementById('cdEventName').value = ev.name;
+      document.getElementById('cdEventDate').value = ev.date;
+    }
+  });
+
+  document.getElementById('cdSaveBtn').addEventListener('click', () => {
+    const name = document.getElementById('cdEventName').value.trim();
+    const date = document.getElementById('cdEventDate').value;
+    if (!name || !date) return;
+    saveEvent({ name, date });
+    document.getElementById('countdownForm').style.display = 'none';
+    render();
+  });
+
+  document.getElementById('cdDelBtn').addEventListener('click', () => {
+    localStorage.removeItem(KEY);
+    document.getElementById('countdownForm').style.display = 'none';
+    render();
+  });
+
+  interval = setInterval(render, 1000);
+  render();
+})();
+
+// ===== Daily Quote =====
+(async function() {
+  try {
+    const res = await fetch('https://v1.hitokoto.cn');
+    if (!res.ok) throw new Error('fail');
+    const data = await res.json();
+    document.getElementById('quoteText').textContent = `"${data.hitokoto}"`;
+    document.getElementById('quoteFrom').textContent = `— ${data.from || '未知'}`;
+  } catch {
+    document.getElementById('quoteText').textContent = '"生活不是等待风暴过去，而是学会在雨中跳舞。"';
+    document.getElementById('quoteFrom').textContent = '— 未知';
+  }
+  document.getElementById('quoteRefresh').addEventListener('click', async () => {
+    try {
+      const res = await fetch('https://v1.hitokoto.cn');
+      const data = await res.json();
+      document.getElementById('quoteText').textContent = `"${data.hitokoto}"`;
+      document.getElementById('quoteFrom').textContent = `— ${data.from || '未知'}`;
+    } catch {}
+  });
+})();
+
+// ===== Pomodoro =====
+(function() {
+  const WORK = 25 * 60;
+  const BREAK = 5 * 60;
+  let time = WORK;
+  let running = false;
+  let mode = 'work';
+  let interval;
+
+  function updateDisplay() {
+    const m = String(Math.floor(time / 60)).padStart(2, '0');
+    const s = String(time % 60).padStart(2, '0');
+    document.getElementById('pomoTime').textContent = `${m}:${s}`;
+    const total = mode === 'work' ? WORK : BREAK;
+    const offset = 326.7 * (1 - time / total);
+    document.getElementById('pomoRing').setAttribute('stroke-dashoffset', offset);
+    document.getElementById('pomoMode').textContent = mode === 'work' ? '🎯 专注中' : '☕ 休息中';
+  }
+
+  function tick() {
+    if (time <= 0) {
+      if (mode === 'work') {
+        mode = 'break'; time = BREAK;
+        if (Notification.permission === 'granted') new Notification('🍅 番茄钟', { body: '专注时间结束！休息一下吧。' });
+      } else {
+        mode = 'work'; time = WORK;
+        if (Notification.permission === 'granted') new Notification('🍅 番茄钟', { body: '休息结束！开始专注。' });
+      }
+    } else { time--; }
+    updateDisplay();
+  }
+
+  document.getElementById('pomoStart').addEventListener('click', () => {
+    if (running) {
+      clearInterval(interval);
+      running = false;
+      document.getElementById('pomoStart').textContent = '▶ 继续';
+    } else {
+      if (Notification.permission === 'default') Notification.requestPermission();
+      interval = setInterval(tick, 1000);
+      running = true;
+      document.getElementById('pomoStart').textContent = '⏸ 暂停';
+    }
+  });
+
+  document.getElementById('pomoReset').addEventListener('click', () => {
+    clearInterval(interval);
+    running = false; mode = 'work'; time = WORK;
+    document.getElementById('pomoStart').textContent = '▶ 开始';
+    updateDisplay();
+  });
+
+  updateDisplay();
+})();
+
+// ===== TODO =====
+(function() {
+  const KEY = 'myspace_todos';
+  function load() { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; } }
+  function save(todos) { localStorage.setItem(KEY, JSON.stringify(todos)); }
+
+  function render() {
+    const todos = load();
+    document.getElementById('todoList').innerHTML = todos.map((t, i) =>
+      `<li class="todo-item">
+        <input type="checkbox" class="todo-check" data-idx="${i}" ${t.done ? 'checked' : ''}>
+        <span class="todo-text${t.done ? ' done' : ''}">${escHtml(t.text)}</span>
+        <button class="todo-del" data-idx="${i}">✕</button>
+      </li>`
+    ).join('');
+  }
+
+  function escHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+  document.getElementById('todoAdd').addEventListener('click', () => {
+    const input = document.getElementById('todoInput');
+    const text = input.value.trim();
+    if (!text) return;
+    const todos = load();
+    todos.push({ text, done: false });
+    save(todos);
+    input.value = '';
+    render();
+  });
+
+  document.getElementById('todoInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('todoAdd').click();
+  });
+
+  document.getElementById('todoList').addEventListener('click', e => {
+    const todos = load();
+    const check = e.target.closest('.todo-check');
+    const del = e.target.closest('.todo-del');
+    if (check) {
+      const idx = parseInt(check.dataset.idx);
+      todos[idx].done = check.checked;
+      save(todos);
+      render();
+    }
+    if (del) {
+      const idx = parseInt(del.dataset.idx);
+      todos.splice(idx, 1);
+      save(todos);
+      render();
+    }
+  });
+
+  render();
+})();
+
+// ===== Notes =====
+(function() {
+  const KEY = 'myspace_notes';
+  function load() { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; } }
+  function save(notes) { localStorage.setItem(KEY, JSON.stringify(notes)); }
+
+  function render() {
+    const notes = load();
+    document.getElementById('notesList').innerHTML = notes.map((n, i) =>
+      `<div class="note-item">
+        <textarea class="note-text" data-idx="${i}" rows="2">${escHtml(n)}</textarea>
+        <button class="note-del" data-idx="${i}">✕</button>
+      </div>`
+    ).join('');
+  }
+
+  function escHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+  document.getElementById('notesAddBtn').addEventListener('click', () => {
+    const notes = load();
+    notes.push('');
+    save(notes);
+    render();
+    const ta = document.querySelector('.note-text:last-child');
+    if (ta) setTimeout(() => ta.focus(), 50);
+  });
+
+  document.getElementById('notesList').addEventListener('input', e => {
+    const ta = e.target.closest('.note-text');
+    if (!ta) return;
+    const notes = load();
+    notes[parseInt(ta.dataset.idx)] = ta.value;
+    save(notes);
+  });
+
+  document.getElementById('notesList').addEventListener('click', e => {
+    const del = e.target.closest('.note-del');
+    if (!del) return;
+    const notes = load();
+    notes.splice(parseInt(del.dataset.idx), 1);
+    save(notes);
+    render();
+  });
+
+  render();
+})();
+
+// ===== Music Player (iTunes Preview) =====
+(function() {
+  const audio = document.getElementById('audioPlayer');
+  const searchInput = document.getElementById('searchInput');
+  const searchBtn = document.getElementById('searchBtn');
+  const musicStatus = document.getElementById('musicStatus');
+  const trackGrid = document.getElementById('trackGrid');
+  const nowPlaying = document.getElementById('nowPlaying');
+  const npCover = document.getElementById('npCover');
+  const npTitle = document.getElementById('npTitle');
+  const npArtist = document.getElementById('npArtist');
+  const npPlay = document.getElementById('npPlay');
+  const npPrev = document.getElementById('npPrev');
+  const npNext = document.getElementById('npNext');
+  const npProgress = document.getElementById('npProgress');
+  const npCurrent = document.getElementById('npCurrent');
+  const npDuration = document.getElementById('npDuration');
+  const npVolume = document.getElementById('npVolume');
+  const npClose = document.getElementById('npClose');
+
+  let playlist = [];
+  let currentIdx = -1;
+  let isPlaying = false;
+
+  function formatTime(s) {
+    if (isNaN(s) || !isFinite(s)) return '0:00';
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60);
+    return m + ':' + String(sec).padStart(2, '0');
+  }
+
+  function renderTracks() {
+    if (playlist.length === 0) {
+      trackGrid.innerHTML = '';
+      musicStatus.textContent = '搜索你喜欢的音乐或歌手，点击即可播放 🎧';
+      musicStatus.style.display = 'block';
+      return;
+    }
+    musicStatus.style.display = 'none';
+    trackGrid.innerHTML = playlist.map((t, i) =>
+      `<div class="track-card${i === currentIdx ? ' playing' : ''}" data-index="${i}">
+        <img class="track-cover" src="${t.artwork}" alt="${t.name}" loading="lazy"
+          onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2248%22 height=%2248%22><rect fill=%22%23eee%22 width=%2248%22 height=%2248%22/><text x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22 fill=%22%23999%22 font-size=%2214%22>🎵</text></svg>'">
+        <div class="track-info">
+          <div class="track-name">${escHtml(t.name)}</div>
+          <div class="track-artist">${escHtml(t.artist)}</div>
+        </div>
+        <span class="play-indicator">▶</span>
+      </div>`
+    ).join('');
+  }
+
+  function escHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+  function updateNowPlaying() {
+    if (currentIdx < 0 || currentIdx >= playlist.length) return;
+    const t = playlist[currentIdx];
+    npCover.src = t.artwork;
+    npTitle.textContent = t.name;
+    npArtist.textContent = t.artist;
+    nowPlaying.classList.add('visible');
+  }
+
+  function playTrack(idx) {
+    if (idx < 0 || idx >= playlist.length) return;
+    currentIdx = idx;
+    const t = playlist[currentIdx];
+    audio.src = t.previewUrl;
+    audio.load();
+    audio.play().then(() => {
+      isPlaying = true;
+      npPlay.textContent = '⏸';
+      updateNowPlaying();
+      renderTracks();
+    }).catch(() => { showToast('播放失败，请试试其他歌曲'); });
+  }
+
+  function togglePlay() {
+    if (currentIdx < 0) return;
+    if (isPlaying) { audio.pause(); isPlaying = false; npPlay.textContent = '▶'; }
+    else { audio.play().then(() => { isPlaying = true; npPlay.textContent = '⏸'; }).catch(() => showToast('播放失败')); }
+  }
+
+  function playNext() { if (playlist.length === 0) return; playTrack((currentIdx + 1) % playlist.length); }
+  function playPrev() { if (playlist.length === 0) return; playTrack((currentIdx - 1 + playlist.length) % playlist.length); }
+  function stopPlayer() {
+    audio.pause(); audio.src = ''; isPlaying = false; currentIdx = -1;
+    npPlay.textContent = '▶'; nowPlaying.classList.remove('visible'); renderTracks();
+  }
+
+  audio.addEventListener('timeupdate', () => {
+    if (!audio.duration || !isFinite(audio.duration)) return;
+    npProgress.value = (audio.currentTime / audio.duration) * 100;
+    npCurrent.textContent = formatTime(audio.currentTime);
+  });
+  audio.addEventListener('loadedmetadata', () => {
+    npDuration.textContent = formatTime(audio.duration);
+    npProgress.max = 100; npProgress.value = 0; npCurrent.textContent = '0:00';
+  });
+  audio.addEventListener('ended', playNext);
+  audio.addEventListener('play', () => { isPlaying = true; npPlay.textContent = '⏸'; });
+  audio.addEventListener('pause', () => { isPlaying = false; npPlay.textContent = '▶'; });
+  audio.addEventListener('error', () => { showToast('音频加载失败，已跳过'); playNext(); });
+
+  audio.volume = 0.7; npVolume.value = 0.7;
+
+  npPlay.addEventListener('click', togglePlay);
+  npNext.addEventListener('click', playNext);
+  npPrev.addEventListener('click', playPrev);
+  npProgress.addEventListener('input', () => {
+    if (!audio.duration || !isFinite(audio.duration)) return;
+    audio.currentTime = (npProgress.value / 100) * audio.duration;
+  });
+  npVolume.addEventListener('input', () => { audio.volume = npVolume.value; });
+  npClose.addEventListener('click', stopPlayer);
+  trackGrid.addEventListener('click', e => {
+    const card = e.target.closest('.track-card');
+    if (!card) return;
+    const idx = parseInt(card.dataset.index);
+    idx === currentIdx ? togglePlay() : playTrack(idx);
+  });
+
+  async function searchMusic(query) {
+    if (!query.trim()) return;
+    musicStatus.innerHTML = '<div class="spinner"></div><div>搜索中...</div>';
+    musicStatus.style.display = 'block';
+    trackGrid.innerHTML = '';
+    try {
+      const res = await fetch(
+        `https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&limit=20&country=CN`
+      );
+      if (!res.ok) throw new Error('Network error');
+      const data = await res.json();
+      playlist = data.results
+        .filter(r => r.previewUrl)
+        .map(r => ({
+          name: r.trackName || r.collectionName || '未知歌曲',
+          artist: r.artistName || '未知歌手',
+          artwork: r.artworkUrl100 ? r.artworkUrl100.replace('100x100', '300x300') : '',
+          previewUrl: r.previewUrl,
+        }));
+      if (playlist.length === 0) {
+        musicStatus.textContent = '😢 没有找到可播放的歌曲，换个关键词试试？';
+        musicStatus.style.display = 'block';
+      } else {
+        musicStatus.style.display = 'none';
+      }
+      currentIdx = -1;
+      stopPlayer();
+      renderTracks();
+    } catch (err) {
+      musicStatus.textContent = '⚠️ 搜索失败，请检查网络后重试';
+      musicStatus.style.display = 'block';
+    }
+  }
+
+  searchBtn.addEventListener('click', () => searchMusic(searchInput.value));
+  searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') searchMusic(searchInput.value); });
+})();
+
+// ===== Guestbook =====
+(function() {
+  const STORAGE_KEY = 'myspace_guestbook';
+  const gbName = document.getElementById('gbName');
+  const gbAvatar = document.getElementById('gbAvatar');
+  const gbMessage = document.getElementById('gbMessage');
+  const gbSubmit = document.getElementById('gbSubmit');
+  const gbList = document.getElementById('gbList');
+  const gbEmpty = document.getElementById('gbEmpty');
+  const charCount = document.getElementById('charCount');
+
+  function loadMessages() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { return []; } }
+  function saveMessages(msgs) { localStorage.setItem(STORAGE_KEY, JSON.stringify(msgs)); }
+
+  function renderMessages() {
+    const msgs = loadMessages();
+    if (msgs.length === 0) { gbList.innerHTML = ''; gbEmpty.style.display = 'block'; return; }
+    gbEmpty.style.display = 'none';
+    gbList.innerHTML = msgs.slice().reverse().map((m, i) => {
+      const origIdx = msgs.length - 1 - i;
+      return `<div class="gb-message" style="animation-delay:${i * 0.04}s">
+        <div class="gb-msg-header">
+          <span class="gb-msg-name">${m.avatar || '🙂'} ${escHtml(m.name)}</span>
+          <span style="display:flex;align-items:center;">
+            <span class="gb-msg-time">${m.time}</span>
+            <button class="gb-msg-delete" data-idx="${origIdx}" title="删除">🗑</button>
+          </span>
+        </div>
+        <div class="gb-msg-body">${escHtml(m.message)}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function escHtml(str) { const d = document.createElement('div'); d.textContent = str; return d.innerHTML; }
+
+  function addMessage() {
+    const name = gbName.value.trim();
+    const message = gbMessage.value.trim();
+    if (!name) { showToast('请输入昵称'); gbName.focus(); return; }
+    if (!message) { showToast('请输入留言内容'); gbMessage.focus(); return; }
+    const msgs = loadMessages();
+    const now = new Date();
+    const timeStr = now.getFullYear() + '-' +
+      String(now.getMonth()+1).padStart(2,'0') + '-' +
+      String(now.getDate()).padStart(2,'0') + ' ' +
+      String(now.getHours()).padStart(2,'0') + ':' +
+      String(now.getMinutes()).padStart(2,'0');
+    msgs.push({ name, avatar: gbAvatar.value.trim() || '🙂', message, time: timeStr });
+    saveMessages(msgs);
+    gbName.value = ''; gbAvatar.value = ''; gbMessage.value = '';
+    charCount.textContent = '0 / 500';
+    renderMessages();
+    showToast('留言发送成功 ✨');
+  }
+
+  function deleteMessage(idx) {
+    const msgs = loadMessages();
+    if (idx < 0 || idx >= msgs.length) return;
+    msgs.splice(idx, 1);
+    saveMessages(msgs);
+    renderMessages();
+    showToast('留言已删除');
+  }
+
+  gbSubmit.addEventListener('click', addMessage);
+  gbMessage.addEventListener('input', () => { charCount.textContent = gbMessage.value.length + ' / 500'; });
+  gbList.addEventListener('click', e => {
+    const btn = e.target.closest('.gb-msg-delete');
+    if (!btn) return;
+    const idx = parseInt(btn.dataset.idx);
+    if (confirm('确定要删除这条留言吗？')) deleteMessage(idx);
+  });
+
+  renderMessages();
+})();
+
+// ===== Toast =====
+function showToast(msg) {
+  const existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2500);
+}
+</script>
+
 </body>
 </html>
